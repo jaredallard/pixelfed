@@ -31,7 +31,7 @@ ARG DOTTIE_VERSION="v0.14.3"
 ARG PHP_VERSION="8.4"
 
 # See: https://github.com/docker-library/docs/blob/master/php/README.md#image-variants
-ARG PHP_BASE_TYPE="apache"
+ARG PHP_BASE_TYPE="fpm"
 ARG PHP_DEBIAN_RELEASE="bookworm"
 
 ARG RUNTIME_UID=33 # often called 'www-data'
@@ -44,7 +44,8 @@ ARG APT_PACKAGES_EXTRA=
 # ! NOTE: imagick is installed from [master] branch on GitHub due to 8.3 bug on ARM that haven't
 # ! been released yet (after +10 months)!
 # ! See: https://github.com/Imagick/imagick/pull/641
-ARG PHP_PECL_EXTENSIONS="redis https://codeload.github.com/Imagick/imagick/tar.gz/28f27044e435a2b203e32675e942eb8de620ee58"
+# ! Also see: https://github.com/Imagick/imagick/issues/698
+ARG PHP_PECL_EXTENSIONS="redis https://codeload.github.com/mvorisek/imagick/tar.gz/65e27f2bc02e7e8f1bf64e26e359e42a1331fca1"
 ARG PHP_PECL_EXTENSIONS_EXTRA=
 
 # Extensions installed via [docker-php-ext-install]
@@ -104,11 +105,11 @@ ARG GOMPLATE_VERSION
 
 RUN set -ex \
     && curl \
-        --silent \
-        --show-error \
-        --location \
-        --output /usr/local/bin/gomplate \
-        https://github.com/hairyhenderson/gomplate/releases/download/${GOMPLATE_VERSION}/gomplate_${TARGETOS}-${TARGETARCH} \
+    --silent \
+    --show-error \
+    --location \
+    --output /usr/local/bin/gomplate \
+    https://github.com/hairyhenderson/gomplate/releases/download/${GOMPLATE_VERSION}/gomplate_${TARGETOS}-${TARGETARCH} \
     && chmod +x /usr/local/bin/gomplate \
     && /usr/local/bin/gomplate --version
 
@@ -207,7 +208,7 @@ SHELL [ "/usr/bin/bash", "-c" ]
 RUN --mount=type=cache,id=pixelfed-node-${BUILDARCH},sharing=locked,target=/tmp/cache \
     --mount=type=bind,source=package.json,target=/var/www/package.json \
     --mount=type=bind,source=package-lock.json,target=/var/www/package-lock.json \
-<<EOF
+    <<EOF
     if [[ $BUILD_FRONTEND -eq 1 ]];
     then
         npm install --cache /tmp/cache --no-save --dev
@@ -221,7 +222,7 @@ COPY --chown=${RUNTIME_UID}:${RUNTIME_GID} . /var/www
 
 # Build the frontend with "mix" (See package.json)
 RUN \
-<<EOF
+    <<EOF
     if [[ $BUILD_FRONTEND -eq 1 ]];
     then
         npm run production
@@ -306,20 +307,6 @@ RUN set -ex \
 COPY docker/shared/root /
 
 ENTRYPOINT ["/docker/entrypoint.sh"]
-
-#######################################################
-# Runtime: apache
-#######################################################
-
-FROM shared-runtime AS apache-runtime
-
-COPY docker/apache/root /
-
-RUN set -ex \
-    && a2enmod rewrite remoteip proxy proxy_http \
-    && a2enconf remoteip
-
-CMD ["apache2-foreground"]
 
 #######################################################
 # Runtime: fpm
