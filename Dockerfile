@@ -6,33 +6,33 @@
 #######################################################
 
 # See: https://github.com/mlocati/docker-php-extension-installer
-ARG DOCKER_PHP_EXTENSION_INSTALLER_VERSION="2.1.80"
+ARG DOCKER_PHP_EXTENSION_INSTALLER_VERSION="2.7.13"
 
 # See: https://github.com/composer/composer
-ARG COMPOSER_VERSION="2.6"
+ARG COMPOSER_VERSION="2.8"
 
 # See: https://nginx.org/
-ARG NGINX_VERSION="1.25.3"
+ARG NGINX_VERSION="1.27.3"
 
 # See: https://github.com/ddollar/forego
 ARG FOREGO_VERSION="0.17.2"
 
 # See: https://github.com/hairyhenderson/gomplate
-ARG GOMPLATE_VERSION="v3.11.6"
+ARG GOMPLATE_VERSION="v4.3.0"
 
 # See: https://github.com/jippi/dottie
-ARG DOTTIE_VERSION="v0.9.5"
+ARG DOTTIE_VERSION="v0.14.3"
 
 ###
 # PHP base configuration
 ###
 
 # See: https://hub.docker.com/_/php/tags
-ARG PHP_VERSION="8.1"
+ARG PHP_VERSION="8.4"
 
 # See: https://github.com/docker-library/docs/blob/master/php/README.md#image-variants
 ARG PHP_BASE_TYPE="apache"
-ARG PHP_DEBIAN_RELEASE="bullseye"
+ARG PHP_DEBIAN_RELEASE="bookworm"
 
 ARG RUNTIME_UID=33 # often called 'www-data'
 ARG RUNTIME_GID=33 # often called 'www-data'
