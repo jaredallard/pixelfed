@@ -46,7 +46,6 @@ class RemoteFollowImportRecent implements ShouldQueue
             'image/jpg',
             'image/jpeg',
             'image/png',
-            'image/heic',
         ];
     }
 
@@ -191,7 +190,7 @@ class RemoteFollowImportRecent implements ShouldQueue
                 Log::info('Skipping invalid attachment URL: ' . $url);
                 continue;
             }
-
+            
             $count++;
 
             if ($count === 1) {
@@ -229,7 +228,7 @@ class RemoteFollowImportRecent implements ShouldQueue
             $media->save();
 
             ImageThumbnail::dispatch($media);
-
+            
             @unlink($file);
 
             return true;

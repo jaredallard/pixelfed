@@ -313,9 +313,6 @@ class ApiV2Controller extends Controller
             case 'image/png':
                 ImageOptimize::dispatch($media)->onQueue('mmo');
                 break;
-            case 'image/heic':
-                ImageOptimize::dispatch($media)->onQueue('mmo');
-                break;
 
             case 'video/mp4':
                 VideoThumbnail::dispatch($media)->onQueue('mmo');

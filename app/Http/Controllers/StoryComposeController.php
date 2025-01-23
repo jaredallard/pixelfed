@@ -99,7 +99,6 @@ class StoryComposeController extends Controller
         if (in_array($photo->getMimeType(), [
             'image/jpeg',
             'image/png',
-            'image/heic',
             'video/mp4',
         ]) == false) {
             abort(400, 'Invalid media type');
@@ -109,7 +108,7 @@ class StoryComposeController extends Controller
 
         $storagePath = MediaPathService::story($user->profile);
         $path = $photo->storePubliclyAs($storagePath, Str::random(random_int(2, 12)).'_'.Str::random(random_int(32, 35)).'_'.Str::random(random_int(1, 14)).'.'.$photo->extension());
-        if (in_array($photo->getMimeType(), ['image/jpeg', 'image/png', 'image/heic'])) {
+        if (in_array($photo->getMimeType(), ['image/jpeg', 'image/png'])) {
             $fpath = storage_path('app/'.$path);
             $img = Intervention::make($fpath);
             $img->orientate();

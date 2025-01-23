@@ -40,7 +40,7 @@ class RegenerateThumbnails extends Command
     public function handle()
     {
         DB::transaction(function() {
-            Media::whereIn('mime', ['image/jpeg', 'image/png', 'image/heic'])
+            Media::whereIn('mime', ['image/jpeg', 'image/png'])
                 ->chunk(50, function($medias) {
                     foreach($medias as $media) {
                         \App\Jobs\ImageOptimizePipeline\ImageThumbnail::dispatch($media);

@@ -16,8 +16,7 @@ class Image
 	public $acceptedMimes = [
 		'image/png',
 		'image/jpeg',
-		'image/webp',
-		'image/heic'
+		'image/webp'
 	];
 
 	public function __construct()
@@ -161,8 +160,8 @@ class Image
 				}
 
 				if (
-					($ratio['width_original'] > $aspect['width'])
-					|| ($ratio['height_original'] > $aspect['height'])
+				    ($ratio['width_original'] > $aspect['width'])
+				    || ($ratio['height_original'] > $aspect['height'])
 				) {
 					$img->resize($aspect['width'], $aspect['height'], function ($constraint) {
 						$constraint->aspectRatio();

@@ -112,7 +112,7 @@ class Status extends Model
         }
 
 		return collect($entity['media_attachments'])
-            ->filter(fn($media) => $media['type'] == 'image' && in_array($media['mime'], ['image/jpeg', 'image/png', 'image/heic']))
+            ->filter(fn($media) => $media['type'] == 'image' && in_array($media['mime'], ['image/jpeg', 'image/png']))
             ->map(function($media) {
                 if(!Str::endsWith($media['preview_url'], ['no-preview.png', 'no-preview.jpg'])) {
                     return $media['preview_url'];
@@ -350,7 +350,7 @@ class Status extends Model
 
 	public function scopeToAudience($audience)
 	{
-		if(!in_array($audience, ['to', 'cc']) || $this->local == false) {
+		if(!in_array($audience, ['to', 'cc']) || $this->local == false) { 
 			return;
 		}
 		$res = [];

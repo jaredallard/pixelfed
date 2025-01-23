@@ -135,9 +135,7 @@ class ComposeController extends Controller
             case 'image/webp':
                 ImageOptimize::dispatch($media)->onQueue('mmo');
                 break;
-            case 'image/heic':
-                ImageOptimize::dispatch($media)->onQueue('mmo');
-                break;
+
             case 'video/mp4':
                 VideoThumbnail::dispatch($media)->onQueue('mmo');
                 $preview_url = '/storage/no-preview.png';
