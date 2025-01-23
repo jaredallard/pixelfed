@@ -49,6 +49,7 @@ class CatchUnoptimizedMedia extends Command
             ->whereIn('mime', [
                 'image/jpeg',
                 'image/png',
+                'image/heic'
             ])
             ->chunk(50, function($medias) {
                 foreach ($medias as $media) {

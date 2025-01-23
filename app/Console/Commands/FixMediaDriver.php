@@ -99,7 +99,8 @@ class FixMediaDriver extends Command
 						in_array($media->mime, [
 							'image/jpeg',
 							'image/png',
-							'image/webp'
+							'image/webp',
+							'image/heic'
 						])
 					) {
 						ImageOptimize::dispatch($media);

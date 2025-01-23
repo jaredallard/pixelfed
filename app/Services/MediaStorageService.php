@@ -126,6 +126,7 @@ class MediaStorageService
         $mimes = [
             'image/jpeg',
             'image/png',
+            'image/heic',
             'video/mp4',
         ];
 
@@ -154,6 +155,10 @@ class MediaStorageService
 
             case 'image/jpeg':
                 $ext = '.jpg';
+                break;
+
+            case 'image/heic':
+                $ext = '.heic';
                 break;
 
             case 'video/mp4':
