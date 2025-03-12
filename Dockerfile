@@ -6,22 +6,22 @@
 #######################################################
 
 # See: https://github.com/mlocati/docker-php-extension-installer
-ARG DOCKER_PHP_EXTENSION_INSTALLER_VERSION="2.7.13"
+ARG DOCKER_PHP_EXTENSION_INSTALLER_VERSION="2.7.28"
 
 # See: https://github.com/composer/composer
 ARG COMPOSER_VERSION="2.8"
 
 # See: https://nginx.org/
-ARG NGINX_VERSION="1.27.3"
+ARG NGINX_VERSION="1.27.4"
 
 # See: https://github.com/ddollar/forego
 ARG FOREGO_VERSION="0.17.2"
 
 # See: https://github.com/hairyhenderson/gomplate
-ARG GOMPLATE_VERSION="v4.3.0"
+ARG GOMPLATE_VERSION="v4.3.1"
 
 # See: https://github.com/jippi/dottie
-ARG DOTTIE_VERSION="v0.14.3"
+ARG DOTTIE_VERSION="v0.15.1"
 
 ###
 # PHP base configuration
@@ -44,8 +44,7 @@ ARG APT_PACKAGES_EXTRA=
 # ! NOTE: imagick is installed from [master] branch on GitHub due to 8.3 bug on ARM that haven't
 # ! been released yet (after +10 months)!
 # ! See: https://github.com/Imagick/imagick/pull/641
-# ! Also see: https://github.com/Imagick/imagick/issues/698
-ARG PHP_PECL_EXTENSIONS="redis https://codeload.github.com/mvorisek/imagick/tar.gz/65e27f2bc02e7e8f1bf64e26e359e42a1331fca1"
+ARG PHP_PECL_EXTENSIONS="redis https://codeload.github.com/Imagick/imagick/tar.gz/4716e04d7a6f119c456b22c9c3fd3c6e246358f4"
 ARG PHP_PECL_EXTENSIONS_EXTRA=
 
 # Extensions installed via [docker-php-ext-install]
