@@ -6,32 +6,32 @@
 #######################################################
 
 # See: https://github.com/mlocati/docker-php-extension-installer
-ARG DOCKER_PHP_EXTENSION_INSTALLER_VERSION="2.1.80"
+ARG DOCKER_PHP_EXTENSION_INSTALLER_VERSION="2.7.28"
 
 # See: https://github.com/composer/composer
-ARG COMPOSER_VERSION="2.6"
+ARG COMPOSER_VERSION="2.8"
 
 # See: https://nginx.org/
-ARG NGINX_VERSION="1.25.3"
+ARG NGINX_VERSION="1.27.4"
 
 # See: https://github.com/ddollar/forego
 ARG FOREGO_VERSION="0.17.2"
 
 # See: https://github.com/hairyhenderson/gomplate
-ARG GOMPLATE_VERSION="v3.11.6"
+ARG GOMPLATE_VERSION="v4.3.1"
 
 # See: https://github.com/jippi/dottie
-ARG DOTTIE_VERSION="v0.9.5"
+ARG DOTTIE_VERSION="v0.15.1"
 
 ###
 # PHP base configuration
 ###
 
 # See: https://hub.docker.com/_/php/tags
-ARG PHP_VERSION="8.3"
+ARG PHP_VERSION="8.4"
 
 # See: https://github.com/docker-library/docs/blob/master/php/README.md#image-variants
-ARG PHP_BASE_TYPE="apache"
+ARG PHP_BASE_TYPE="fpm"
 ARG PHP_DEBIAN_RELEASE="bookworm"
 
 ARG RUNTIME_UID=33 # often called 'www-data'
@@ -44,7 +44,7 @@ ARG APT_PACKAGES_EXTRA=
 # ! NOTE: imagick is installed from [master] branch on GitHub due to 8.3 bug on ARM that haven't
 # ! been released yet (after +10 months)!
 # ! See: https://github.com/Imagick/imagick/pull/641
-ARG PHP_PECL_EXTENSIONS="redis https://codeload.github.com/Imagick/imagick/tar.gz/28f27044e435a2b203e32675e942eb8de620ee58"
+ARG PHP_PECL_EXTENSIONS="redis https://codeload.github.com/Imagick/imagick/tar.gz/4716e04d7a6f119c456b22c9c3fd3c6e246358f4"
 ARG PHP_PECL_EXTENSIONS_EXTRA=
 
 # Extensions installed via [docker-php-ext-install]
@@ -104,11 +104,11 @@ ARG GOMPLATE_VERSION
 
 RUN set -ex \
     && curl \
-        --silent \
-        --show-error \
-        --location \
-        --output /usr/local/bin/gomplate \
-        https://github.com/hairyhenderson/gomplate/releases/download/${GOMPLATE_VERSION}/gomplate_${TARGETOS}-${TARGETARCH} \
+    --silent \
+    --show-error \
+    --location \
+    --output /usr/local/bin/gomplate \
+    https://github.com/hairyhenderson/gomplate/releases/download/${GOMPLATE_VERSION}/gomplate_${TARGETOS}-${TARGETARCH} \
     && chmod +x /usr/local/bin/gomplate \
     && /usr/local/bin/gomplate --version
 
@@ -207,7 +207,7 @@ SHELL [ "/usr/bin/bash", "-c" ]
 RUN --mount=type=cache,id=pixelfed-node-${BUILDARCH},sharing=locked,target=/tmp/cache \
     --mount=type=bind,source=package.json,target=/var/www/package.json \
     --mount=type=bind,source=package-lock.json,target=/var/www/package-lock.json \
-<<EOF
+    <<EOF
     if [[ $BUILD_FRONTEND -eq 1 ]];
     then
         npm install --cache /tmp/cache --no-save --dev
@@ -221,7 +221,7 @@ COPY --chown=${RUNTIME_UID}:${RUNTIME_GID} . /var/www
 
 # Build the frontend with "mix" (See package.json)
 RUN \
-<<EOF
+    <<EOF
     if [[ $BUILD_FRONTEND -eq 1 ]];
     then
         npm run production
@@ -290,7 +290,7 @@ ENV RUNTIME_UID=${RUNTIME_UID}
 ENV RUNTIME_GID=${RUNTIME_GID}
 
 COPY --link --from=forego-image /usr/local/bin/forego /usr/local/bin/forego
-COPY --link --from=dottie-image /dottie /usr/local/bin/dottie
+COPY --link --from=dottie-image /usr/local/bin/dottie /usr/local/bin/dottie
 COPY --link --from=gomplate-image /usr/local/bin/gomplate /usr/local/bin/gomplate
 COPY --link --from=composer-image /usr/bin/composer /usr/bin/composer
 COPY --link --from=composer-and-src --chown=${RUNTIME_UID}:${RUNTIME_GID} /var/www /var/www
@@ -306,20 +306,6 @@ RUN set -ex \
 COPY docker/shared/root /
 
 ENTRYPOINT ["/docker/entrypoint.sh"]
-
-#######################################################
-# Runtime: apache
-#######################################################
-
-FROM shared-runtime AS apache-runtime
-
-COPY docker/apache/root /
-
-RUN set -ex \
-    && a2enmod rewrite remoteip proxy proxy_http \
-    && a2enconf remoteip
-
-CMD ["apache2-foreground"]
 
 #######################################################
 # Runtime: fpm
@@ -362,3 +348,4 @@ COPY docker/nginx/Procfile .
 STOPSIGNAL SIGQUIT
 
 CMD ["forego", "start", "-r"]
+
